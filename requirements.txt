@@ -2,6 +2,7 @@ datasets==3.1.0
 gdown==5.2.0
 huggingface-hub==0.29.2
 matplotlib==3.7.5
+kagglehub==0.2.9
 numpy>1.24.4
 python-dateutil==2.9.0
 pytz==2024.1
