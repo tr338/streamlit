@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import transformers
 import os
+from pathlib import Path
 import gdown
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
@@ -134,8 +135,12 @@ def vqa_prediction(question, image_path):
     predicted_idx = torch.argmax(output, dim=1).item()
     
     # 🔹 **Load Answer Space (answer labels)**
-    with open("C:/Users/Lenovo/Downloads/answer_space.txt") as f:
+    file_path = Path("answer_space.txt") 
+    with file_path.open() as f:
         answer_space = f.read().splitlines()
+    
+    #with open("C:/Users/Lenovo/Downloads/answer_space.txt") as f:
+     #   answer_space = f.read().splitlines()
     
     predicted_answer = answer_space[predicted_idx]
     
