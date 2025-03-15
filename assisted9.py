@@ -168,10 +168,7 @@ elif st.session_state.app_stage == 'next_action':
     if st.session_state.last_answer:
         st.write("### Last Answer:", st.session_state.last_answer)
     
-    # If this is the first time in this stage, speak the answer again to ensure it's heard
-    if 'answer_repeated' not in st.session_state or not st.session_state.answer_repeated:
-        speak_text(f"To repeat the answer: {st.session_state.last_answer}")
-        st.session_state.answer_repeated = True
+
     
     # Ask what to do next
     next_prompt = "What would you like to do next? Say 'new image' to capture a new image, 'new question' to ask another question about this image, or 'exit' to finish."
