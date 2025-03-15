@@ -75,76 +75,47 @@ device = torch.device('cpu')
 #trial
 
 file_id = "1r5yrPh0oHsIxzEbdbq_y4ebJwzFPX68J"
-output_path = "trained_model.pth"  # The file will be saved with this name
+output_path = "trained_model.pth" 
 
 
 gdown.download(f"https://drive.google.com/uc?id={file_id}", output_path, quiet=False)
 
-# Load the model
+
 device = torch.device('cpu')
-loaded_model = VQAModel_trained(num_answers=582)  # Make sure class is defined
+loaded_model = VQAModel_trained(num_answers=582)  
 loaded_model.load_state_dict(torch.load(output_path, map_location=device))
 loaded_model.to(device)
 
 #trial ends
 
-
-
-
-
-#actulayy works
-
-
-#loaded_model = VQAModel_trained(num_answers=582)  # Ensure the class is defined before loading
-#loaded_model.load_state_dict(torch.load('C:/Users/Lenovo/Documents/DeployMLModel/trained_model.pth', map_location=torch.device('cpu')))
-#loaded_model.to(torch.device("cpu"))  # Move model to CPU
-
-##till here
-
-
-
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
-# Define image transformation (same as used in training)
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-# 🔹 **Sample Image and Question**
-
 def vqa_prediction(question, image_path):
-#image_path = "C:/Users/Lenovo/Downloads/image1004.png"  # Replace with an actual image path
-#question = "What is shown in the image?"
 
-# Preprocess the image
     image = Image.open(image_path).convert("RGB")
     image = transform(image).unsqueeze(0).to(device)  # Add batch dimension
     
-    # Tokenize the question
+
     inputs = tokenizer(question, return_tensors="pt", padding="max_length", truncation=True, max_length=30)
     input_ids = inputs["input_ids"].to(device)
     attention_mask = inputs["attention_mask"].to(device)
     
-    # 🔹 **Make the prediction**
     with torch.no_grad():
         output = loaded_model(image, input_ids, attention_mask)
     
-    # Get predicted answer index
     predicted_idx = torch.argmax(output, dim=1).item()
-    
-    # 🔹 **Load Answer Space (answer labels)**
+
     file_path = Path("answer_space.txt") 
     with file_path.open() as f:
         answer_space = f.read().splitlines()
     
-    #with open("C:/Users/Lenovo/Downloads/answer_space.txt") as f:
-     #   answer_space = f.read().splitlines()
-    
     predicted_answer = answer_space[predicted_idx]
-    
-    # 🔹 **Display the Result**
+
     print(f"Question: {question}")
     return predicted_answer
     
@@ -157,19 +128,14 @@ def main():
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
 
     if uploaded_file is not None:
-        # Open the image
+        
         image = Image.open(uploaded_file)
     
-        # Display the image
         st.image(image, caption="Uploaded Image", use_column_width=True)
-    
-        # Define a save path
         save_path = os.path.join("uploads", uploaded_file.name)
     
-        # Ensure the "uploads" directory exists
+     
         os.makedirs("uploads", exist_ok=True)
-    
-        # Save the image
         image.save(save_path)
 
     preds = ''
