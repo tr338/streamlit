@@ -101,10 +101,15 @@ transform = transforms.Compose([
 st.title("Visual Question Answering (VQA) App")
 st.subheader("Fully Voice-Controlled for Accessibility")
 
-# Initialize pygame mixer for audio playback
+os.environ["SDL_AUDIODRIVER"] = "dsp"
+
 if 'audio_initialized' not in st.session_state:
-    pygame.mixer.init()
-    st.session_state.audio_initialized = True
+    try:
+        pygame.mixer.init()
+        st.session_state.audio_initialized = True
+    except pygame.error as e:
+        st.session_state.audio_initialized = False
+        st.warning(f"⚠️ No audio device found. Audio playback may not work. ({e})")
 
 
 
