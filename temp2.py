@@ -74,7 +74,7 @@ device = torch.device('cpu')
 
 #trial
 
-file_id = "1r5yrPh0oHsIxzEbdbq_y4ebJwzFPX68J"
+file_id = "1gcl7ugGFazUQX4THBekpUEcnlMCnBsug"
 output_path = "trained_model.pth" 
 
 
